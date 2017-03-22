@@ -6,6 +6,7 @@ The skip list data structure is an ordered linear data structure (linked list co
 
 <p align="center">
   <img src="/images/skiplist.gif?raw=true" title="Vanilla Linked List, and Skip Lists of 2 and 3 levels"/>
+  Vanilla Linked List, and Skip Lists of 2 and 3 levels
 </p>
 
 This is because a skip list data structure maintains a linked hierarchy of subsequences, with each subsequences skipping over fewer elements than the previous one.

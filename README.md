@@ -20,5 +20,5 @@ As of now, our plan is to implement a list that allows duplicate elements, altho
 ```
 	Anush S. Kumar (anushkumar27@gmail.com)
 	Sushrith Shriniwas Arkal (sushrith.arkal@gmail.com)
-	Tejas S Kasetty (tejas.sk@gmail.com)
+	Tejas S Kasetty (tejaskasetty@gmail.com)
 ```

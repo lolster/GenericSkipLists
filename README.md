@@ -4,7 +4,9 @@
 
 The skip list data structure is an ordered linear data structure (linked list container) that also allows fast search (better than O(N), where N is the number of elements in the list). This is made possible by allowing the search algorithm to &quot;skip&quot; intermediate nodes until it reaches the node that it is looking for. The average case time complexity can be shown to be O(logN), and even more impressive is that it can be shown that, &quot;with high probability&quot;, the time complexity is O(logN).
 
-![alt text](/images/skiplist.gif?raw=true "Vanilla Linked List, and Skip Lists of 2 and 3 levels")
+<p align="center">
+  <img src="/images/skiplist.gif?raw=true" title="Vanilla Linked List, and Skip Lists of 2 and 3 levels"/>
+</p>
 
 This is because a skip list data structure maintains a linked hierarchy of subsequences, with each subsequences skipping over fewer elements than the previous one.
 

@@ -15,4 +15,4 @@ As of now, our plan is to implement a list that allows duplicate elements, altho
 # Authors
 + Anush S. Kumar (anushkumar27@gmail.com)
 + Sushrith Sriniwas Arkal (sushrith.arkal@gmail.com)
-+ Tejas S Kasetty (tejas.sk@gmail.com)
++ Tejas S Kasetty (tejaskasetty@gmail.com)

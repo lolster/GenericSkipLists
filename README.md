@@ -17,7 +17,8 @@ In our project, we plan to implement the skip list data structure in a generic m
 As of now, our plan is to implement a list that allows duplicate elements, although it should be noted that, considering the advantage that skip list provides us, implementing a set data structure is also a real probability, and would provide that advantage of possibly cache friendly set iteration and also , on average and &quot;with high probability&quot;,  O(logN) insertion operation.
 
 # Authors
-+ Anush S. Kumar (anushkumar27@gmail.com)
-+ Sushrith Sriniwas Arkal (sushrith.arkal@gmail.com)
-+ Tejas S Kasetty (tejaskasetty@gmail.com)
-
+```
+	Anush S. Kumar (anushkumar27@gmail.com)
+	Sushrith Shriniwas Arkal (sushrith.arkal@gmail.com)
+	Tejas S Kasetty (tejaskasetty@gmail.com)
+```

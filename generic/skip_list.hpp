@@ -10,6 +10,7 @@
 #if DEBUG
 #include <iostream>
 #endif
+
 /*
 	See: http://www.mathcs.emory.edu/~cheung/Courses/323/Syllabus/Map/FIGS/skip-list22.gif
 */
@@ -21,13 +22,14 @@ template <
 > class skip_list {
 public:
 	//Member types
-	using value_type       =  T;
 	using allocator_type   =  Allocator;
-	using size_type        =  std::size_t;
-	using reference        =  value_type&;
-	using const_reference  =  const value_type&;
+	using value_type       =  typename std::allocator_traits<allocator_type>::value_type;
 	using pointer          =  typename std::allocator_traits<allocator_type>::pointer;
 	using const_pointer    =  typename std::allocator_traits<allocator_type>::const_pointer;
+	using reference        =  value_type&;
+	using const_reference  =  const value_type&;
+	using size_type        =  std::size_t;
+	
 	//TODO
 	// using difference_type = 
 	// using iterator = 
@@ -48,17 +50,18 @@ private:
 		static const node_type_t DATA_NODE = 2;
 		static const node_type_t TAIL_NODE = 3;
 
-
-		value_type data_;
+		//make this pointer to save data
+		pointer data_;
 		const node_type_t type_;
 		node_ *next_;
 		node_ *prev_;
 		node_ *top_;
 		node_ *bottom_;
-		explicit node_(value_type data = 0, node_type_t type = DATA_NODE, node_ *next = nullptr, node_ *prev = nullptr, 
+		explicit node_(pointer data = nullptr, node_type_t type = DATA_NODE, node_ *next = nullptr, node_ *prev = nullptr, 
 			node_ *top = nullptr, node_ *bottom = nullptr)
-		: data_(data), next_(next), prev_(prev), top_(top), bottom_(bottom), type_(type)
-		{}
+		: data_(data), next_(next), prev_(prev), top_(top), bottom_(bottom), type_(type) {
+
+		}
 
 		~node_() {
 			// i am such an idiot
@@ -76,22 +79,26 @@ private:
 	node_ *tail_; //exclusive
 
 public:
+	//TODO
+	// 1. Iterators
+	// 2. insert and all other list operations
+	// 3. All ctors
 	skip_list(size_type h = 1)
 	: h_(h), n_(0) {
 		// TODO
 		// make a stack of head and tail nodes about ye (h_) high
 		// please work
-		head_ = new node_(0, node_::HEAD_NODE);
-		tail_ = new node_(0, node_::TAIL_NODE);
+		head_ = new node_(nullptr, node_::HEAD_NODE);
+		tail_ = new node_(nullptr, node_::TAIL_NODE);
 		head_->next_ = tail_;
 		tail_->prev_ = head_;
 		node_ *h_t = head_;
 		node_ *t_t = tail_;
 		for(size_type i = 1; i < h_; ++i) {
 			// TODO - make more efficient
-			h_t->bottom_ = new node_(0, node_::HEAD_NODE);
+			h_t->bottom_ = new node_(nullptr, node_::HEAD_NODE);
 			h_t->bottom_->top_ = h_t;
-			t_t -> bottom_ = new node_(0, node_::TAIL_NODE);
+			t_t -> bottom_ = new node_(nullptr, node_::TAIL_NODE);
 			t_t->bottom_->top_ = t_t;
 			h_t->bottom_->next_ = t_t->bottom_;
 			t_t->bottom_->prev_ = h_t->bottom_;

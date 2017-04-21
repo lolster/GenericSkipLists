@@ -7,6 +7,7 @@
 #include <memory>
 #include <limits>
 #include <cstdlib>
+#include <unistd.h> // for rand()
 
 #if DEBUG
 #include <iostream>
@@ -29,17 +30,17 @@ public:
 	using value_type       =  typename std::allocator_traits<allocator_type>::value_type;
 	using pointer          =  typename std::allocator_traits<allocator_type>::pointer;
 	using reference        =  value_type&;
-	using const_pointer    =  const value_type&;
-	using const_reference  =  typename std::allocator_traits<Allocator>::pointer;
+	using const_pointer    =  typename std::allocator_traits<Allocator>::const_pointer;
+	using const_reference  =  const value_type&;
 	using size_type        =  std::size_t; // Its just unsigned int - size_t sizeof(x)
 
 private:
 	const size_type h; // max height of the skip list - doesn't change for now
 	size_type n; // counter for number of nodes in the list
 
-	Compare comp = Compare();
 	allocator_type alloc = allocator_type();
-	
+	Compare comp;
+
 	// Node definition
 	struct node {
 
@@ -50,7 +51,9 @@ private:
 		node *prev;
 		node *top;
 		node *bottom;
-
+		
+		//skip_list<T, Compare, Allocator>::comp;
+		
 		//constructor
 		explicit node( pointer data = nullptr,
 					   node *next = nullptr, 
@@ -74,20 +77,27 @@ private:
 		}
 
 		//utility functions
-		bool is_head() {
+		bool is_head() const {
 			return this->prev == nullptr && this->data == nullptr;
 		}
 
-		bool is_tail() {
+		bool is_tail() const {
 			return this->next == nullptr && this->data == nullptr;
 		}
 
-		friend bool operator<(node* lhs, node* rhs) {
-			if(lhs->is_head())
+		static bool compare_me(	const skip_list<T, Compare, Allocator> *o, 
+								const node& lhs, 
+								const node& rhs) {
+			if(lhs.is_head()) {
+				std::cout << "Comparing with head\n" ;
 				return true;
-			if(rhs->is_tail())
+			}
+			if(lhs.is_tail()) {
+				std::cout << "Comparing with tail\n" ;
 				return false;
-			return comp(*(lhs->data),*(rhs->data));
+			}	
+			std::cout << lhs.data << "\t" << rhs.data << "\n";
+			return o->comp(*(lhs.data),*(rhs.data));
 		}
 	};
 
@@ -154,21 +164,26 @@ public:
 	// assign
 	
 	
-	iterator insert(reference data){
-		node mynode = new node(alloc.allocate(1));
+	void insert(const_reference data){
+		node *mynode = new node(alloc.allocate(1));
 		*(mynode -> data) = data;
 		
 		node *curr_ptr = head;
 		
+		// Finding pos to insert
 		while( curr_ptr -> bottom != nullptr){
-			
-			if( !(curr_ptr -> next < mynode) ){
+			std::cout << "Level Case\n";
+			if( !( node::compare_me(this, *(curr_ptr -> next), *mynode) ) ){
 				curr_ptr = curr_ptr -> bottom;
 			}
 			else{
 				curr_ptr = curr_ptr -> next;
 			}
-		}			
+		}	
+		std::cout << "base case\n";
+		while(node::compare_me(this, *(curr_ptr -> next), *mynode)){
+				curr_ptr = curr_ptr -> next;
+		}
 		
 		mynode -> next = curr_ptr -> next;
 		mynode -> prev = curr_ptr;
@@ -176,23 +191,40 @@ public:
 		curr_ptr -> next = mynode;
 		
 		// Adding node in upper level - if at all it is lucky
-		while(should_propogate()){
+		while(/*should_propogate()*/true){
 			// checking for node which has propogated
-			while(curr_ptr && curr_ptr -> top != nullptr){
+			while(curr_ptr != nullptr && curr_ptr -> top == nullptr){
 				curr_ptr = curr_ptr -> prev;
 			}
 			// checking if it is in the top level
-			if(!curr_ptr) {
+			if(curr_ptr == nullptr) {
+				std::cout << "curr_ptr is nullptr\n"; 
 				break;
 			}
 			// Inserting new node (mynode) in the current level
 			curr_ptr = curr_ptr -> top;
-			node level_mynode = new node(mynode -> data);
+			node *level_mynode = new node(mynode -> data);
+			std::cout << "curr_ptr: " << curr_ptr << std::endl;
 			level_mynode -> next = curr_ptr -> next;
 			level_mynode -> prev = curr_ptr;
 			level_mynode -> next -> prev = level_mynode;
+			level_mynode -> bottom = mynode;
 			curr_ptr -> next = level_mynode;
+			mynode = level_mynode;
 		}
+		
+		#if DEBUG
+		node *temp = head;
+		while(temp->bottom != nullptr) {
+			temp = temp->bottom;
+		}
+		temp = temp->next;
+		while(!temp->is_tail()){
+			std::cout << *(temp->data) << "->";
+			temp = temp->next;
+		}
+		std::cout << std::endl;
+		#endif
 	}
 	
 	

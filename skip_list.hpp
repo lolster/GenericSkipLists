@@ -27,7 +27,9 @@ public:
 	using allocator_type   =  Allocator;
 	using value_type       =  typename std::allocator_traits<allocator_type>::value_type;
 	using pointer          =  typename std::allocator_traits<allocator_type>::pointer;
-
+	using reference        =  value_type&;
+	using const_pointer    =  const value_type&;
+	using const_reference  =  typename std::allocator_traits<Allocator>::pointer;
 	using size_type        =  std::size_t; // Its just unsigned int - size_t sizeof(x)
 
 private:
@@ -35,7 +37,7 @@ private:
 	size_type n; // counter for number of nodes in the list
 
 	Compare comp = Compare();
-	Allocator alloc = Allocator();
+	allocator_type alloc = allocator_type();
 	
 	// Node definition
 	struct node {
@@ -66,6 +68,8 @@ private:
 			// delete bottom_;
 			// std::cout << "Delete me\n";
 			// No RA, therefore no RD
+			// Do not make mistake of deallocating data.
+			// We will do it elsewhere
 		}
 
 		//utility functions

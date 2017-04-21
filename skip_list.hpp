@@ -81,12 +81,12 @@ private:
 			return this->next == nullptr && this->data == nullptr;
 		}
 
-		friend bool operator<(node& lhs, node& rhs) {
-			if(lhs.is_head())
+		friend bool operator<(node* lhs, node* rhs) {
+			if(lhs->is_head())
 				return true;
-			if(rhs.is_tail())
+			if(rhs->is_tail())
 				return false;
-			return *(lhs.data) < *(rhs.data);
+			return comp(*(lhs->data),*(rhs->data));
 		}
 	};
 

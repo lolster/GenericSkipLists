@@ -6,6 +6,7 @@
 #include <functional>
 #include <memory>
 #include <limits>
+#include <cstdlib>
 
 #if DEBUG
 #include <iostream>
@@ -93,12 +94,18 @@ private:
 	//pointers to head and tail
 	node *head;
 	node *tail; //exclusive
+	
+	bool should_propogate(){
+		return std::rand() % 2 == 1;	
+	}
 
 public:
 
 	skip_list(size_type h = 1)
 	: h(h), n(0) {
-
+		
+		std::srand(getpid()); // Purely randomness
+	
 		// make a stack of head and tail nodes about ye (h) high
 		
 		head = new node(); //Dummy Head node
@@ -145,7 +152,50 @@ public:
 	// TODO
 	// operator=
 	// assign
-
+	
+	
+	iterator insert(reference data){
+		node mynode = new node(alloc.allocate(1));
+		*(mynode -> data) = data;
+		
+		node *curr_ptr = head;
+		
+		while( curr_ptr -> bottom != nullptr){
+			
+			if( !(curr_ptr -> next < mynode) ){
+				curr_ptr = curr_ptr -> bottom;
+			}
+			else{
+				curr_ptr = curr_ptr -> next;
+			}
+		}			
+		
+		mynode -> next = curr_ptr -> next;
+		mynode -> prev = curr_ptr;
+		mynode -> next -> prev = mynode;
+		curr_ptr -> next = mynode;
+		
+		// Adding node in upper level - if at all it is lucky
+		while(should_propogate()){
+			// checking for node which has propogated
+			while(curr_ptr && curr_ptr -> top != nullptr){
+				curr_ptr = curr_ptr -> prev;
+			}
+			// checking if it is in the top level
+			if(!curr_ptr) {
+				break;
+			}
+			// Inserting new node (mynode) in the current level
+			curr_ptr = curr_ptr -> top;
+			node level_mynode = new node(mynode -> data);
+			level_mynode -> next = curr_ptr -> next;
+			level_mynode -> prev = curr_ptr;
+			level_mynode -> next -> prev = level_mynode;
+			curr_ptr -> next = level_mynode;
+		}
+	}
+	
+	
 	allocator_type get_allocator() {
 		return alloc;
 	}

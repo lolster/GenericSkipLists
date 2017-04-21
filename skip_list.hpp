@@ -49,11 +49,11 @@ private:
 		node *bottom;
 
 		//constructor
-		explicit node(	pointer data = nullptr,
-						node *next = nullptr, 
-						node *prev = nullptr, 
-						node *top = nullptr, 
-						node *bottom = nullptr)
+		explicit node( pointer data = nullptr,
+					   node *next = nullptr, 
+					   node *prev = nullptr, 
+					   node *top = nullptr, 
+					   node *bottom = nullptr )
 		: data(data), next(next), prev(prev), top(top), bottom(bottom) {
 
 		}
@@ -67,6 +67,15 @@ private:
 			// std::cout << "Delete me\n";
 			// No RA, therefore no RD
 		}
+
+		//utility functions
+		bool is_head() {
+			return this->next == nullptr;
+		}
+
+		bool is_tail() {
+			return this->prev == nullptr;
+		}
 	};
 
 	//pointers to head and tail
@@ -78,10 +87,10 @@ public:
 	skip_list(size_type h = 1)
 	: h(h), n(0) {
 
-		// make a stack of head and tail nodes about ye (h_) high
+		// make a stack of head and tail nodes about ye (h) high
 		
-		head = new node(nullptr); //Dummy Head node
-		tail = new node(nullptr); //Dummy Tail node
+		head = new node(); //Dummy Head node
+		tail = new node(); //Dummy Tail node
 		//init head and tails (empty skiplist)
 		head->next = tail;
 		tail->prev = head;
@@ -91,10 +100,10 @@ public:
 
 		for(size_type i = 1; i < h; ++i) {
 			// TODO - make more efficient
-			h_stack -> bottom = new node(nullptr);
+			h_stack -> bottom = new node();
 			h_stack -> bottom -> top = h_stack;
 			
-			t_stack -> bottom = new node(nullptr);
+			t_stack -> bottom = new node();
 			t_stack -> bottom -> top = t_stack;
 			
 			h_stack -> bottom -> next = t_stack -> bottom;
@@ -114,7 +123,7 @@ public:
 				node *temp = head;
 				head = head -> next;
 				delete temp;
-				std::cout << "one\n";
+				//std::cout << "one\n";
 			}
 			head = next_level;
 		}

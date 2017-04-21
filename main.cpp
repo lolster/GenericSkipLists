@@ -3,16 +3,14 @@
 #include "skip_list.hpp"
 
 int main() {
-	skip_list<std::string> s(2);
-	s.insert("b");
-	s.insert("d");
-	s.insert("c");
-	s.insert("a");
-	s.insert("r");
-	s.insert("s");
-	s.insert("p");
-	s.insert("x");
-	s.insert("z");
+	skip_list<int> s(3);
+	s.insert(1);
+	s.insert(4);
+	s.insert(8);
+	s.insert(9);
+	s.insert(7);
+	s.insert(6);
+	s.pretty_print();
 	
 	//std::cout << skip_list<int>::comp(3,4) << std::endl;
 	return 0;

@@ -11,6 +11,8 @@
 
 #if DEBUG
 #include <iostream>
+#include <vector>
+#include <algorithm>
 #endif
 
 /*
@@ -106,6 +108,8 @@ private:
 	node *tail; //exclusive
 	
 	bool should_propogate(){
+		//auto temp = std::rand();
+		//std::cout << "should prop rand val: " << temp << "\n";
 		return std::rand() % 2 == 1;	
 	}
 
@@ -191,7 +195,7 @@ public:
 		curr_ptr -> next = mynode;
 		
 		// Adding node in upper level - if at all it is lucky
-		while(/*should_propogate()*/true){
+		while(should_propogate()/*true*/){
 			// checking for node which has propogated
 			while(curr_ptr != nullptr && curr_ptr -> top == nullptr){
 				curr_ptr = curr_ptr -> prev;
@@ -226,6 +230,96 @@ public:
 		std::cout << std::endl;
 		#endif
 	}
+	
+	
+	#if DEBUG
+	void pretty_print() {
+		
+		std::vector<std::vector<value_type>> idk;
+		node *temp = head;
+		
+		
+		while(temp -> bottom){
+			temp = temp -> bottom;
+		}
+		while(temp){
+			std::vector<value_type> level_vector;
+			node *temp_temp = temp->next;
+			while(temp_temp && !temp_temp->is_tail()){
+				level_vector.push_back(*(temp_temp->data));
+				temp_temp = temp_temp -> next;
+			}
+			//std::reverse(level_vector.begin(), level_vector.end());
+			idk.push_back(level_vector);
+			temp = temp -> top; 
+		}
+		
+		std::for_each(idk.begin(), idk.end(), [](auto e){
+			std::for_each(e.begin(), e.end(), [](auto v){
+				std::cout << v << "->";
+			});
+			std::cout << "\n";
+		});
+		
+		int j1 = 0;
+		for(int i = idk.size() - 1; i > 0 ; --i){
+			std::cout << "\nh\t";
+			j1 = idk[i].size() - 1;
+			for(int j = 0; j < idk[0].size(); ++j){
+				// if level is empty
+				if(idk[i].size() == 0){
+					for(int j = 0; j < idk[0].size(); ++j){
+						std::cout << "-" << "\t";	
+					}
+					break;
+				}
+				//std::cout << "if(" << idk[0][j] << "==" << idk[i][j1] << ")\n";
+				if( idk[0][j] == idk[i][j1]){
+					std::cout << idk[0][j] << "\t"; 
+					j1--;
+				}
+				else{
+					std::cout << "-" << "\t";
+				}
+				
+			}
+			std::cout << "t";
+			j1 = 0;
+		}
+		
+		//Special handle for base level
+		std::cout << "\nh\t";
+		for(int i = 0; i < idk[0].size(); i++){
+			std::cout << idk[0][i] << "\t";
+		}
+		std::cout << "t";
+		std::cout << "\n";
+		
+	}
+	#endif
+	
+	void find(const_reference data) {
+		node *mynode = new node(alloc.allocate(1));
+		*(mynode -> data) = data;
+		
+		node *curr_ptr = head;
+		
+		// Finding pos to insert
+		while( curr_ptr -> bottom != nullptr){
+			std::cout << "Level Case\n";
+			if( !( node::compare_me(this, *(curr_ptr -> next), *mynode) ) ){
+				curr_ptr = curr_ptr -> bottom;
+			}
+			else{
+				curr_ptr = curr_ptr -> next;
+			}
+		}	
+		std::cout << "base case\n";
+		while(node::compare_me(this, *(curr_ptr -> next), *mynode)){
+				curr_ptr = curr_ptr -> next;
+		}
+	}
+	
 	
 	
 	allocator_type get_allocator() {

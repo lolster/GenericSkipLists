@@ -213,11 +213,12 @@ public:
 			level_mynode -> prev = curr_ptr;
 			level_mynode -> next -> prev = level_mynode;
 			level_mynode -> bottom = mynode;
+			level_mynode -> bottom -> top = level_mynode;
 			curr_ptr -> next = level_mynode;
 			mynode = level_mynode;
 		}
 		
-		#if DEBUG
+		#if 0
 		node *temp = head;
 		while(temp->bottom != nullptr) {
 			temp = temp->bottom;
@@ -261,6 +262,7 @@ public:
 			std::cout << "\n";
 		});
 		
+		#if 0 //buggy like anything
 		int j1 = 0;
 		for(int i = idk.size() - 1; i > 0 ; --i){
 			std::cout << "\nh\t";
@@ -295,34 +297,14 @@ public:
 		std::cout << "t";
 		std::cout << "\n";
 		
+		#endif
 	}
 	#endif
 	
-	void find(const_reference data) {
-		node *mynode = new node(alloc.allocate(1));
-		*(mynode -> data) = data;
-		
-		node *curr_ptr = head;
-		
-		// Finding pos to insert
-		while( curr_ptr -> bottom != nullptr){
-			std::cout << "Level Case\n";
-			if( !( node::compare_me(this, *(curr_ptr -> next), *mynode) ) ){
-				curr_ptr = curr_ptr -> bottom;
-			}
-			else{
-				curr_ptr = curr_ptr -> next;
-			}
-		}	
-		std::cout << "base case\n";
-		while(node::compare_me(this, *(curr_ptr -> next), *mynode)){
-				curr_ptr = curr_ptr -> next;
-		}
-	}
+
 	
 	class Iterator{
 	public:
-		//soo sleepy.
 		node *curr;
 		
 		Iterator(skip_list<T, Compare, Allocator>* l) : curr(l->head) {
@@ -363,10 +345,6 @@ public:
 			return !(lhs == rhs);
 		}
 		
-		//bidirectional_iterator : forward_iterator {
-		//	iterator& operator--(); //prefix increment
-		//	iterator operator--(int); //postfix decrement
-		//};
 	};
 	
 	Iterator begin() {
@@ -381,6 +359,75 @@ public:
 		}
 		return tempI;
 	}
+	
+	Iterator find(const_reference data) {
+		node *mynode = new node(alloc.allocate(1));
+		*(mynode -> data) = data;
+		
+		node *curr_ptr = head;
+		
+		// Finding pos to insert
+		while( curr_ptr -> bottom != nullptr){
+			if( !( node::compare_me(this, *(curr_ptr -> next), *mynode) ) ){
+				curr_ptr = curr_ptr -> bottom;
+			}
+			else{
+				curr_ptr = curr_ptr -> next;
+			}
+		}	
+		while(node::compare_me(this, *(curr_ptr -> next), *mynode)){
+				curr_ptr = curr_ptr -> next;
+		}
+		
+		if( (!node::compare_me(this, *(curr_ptr -> next), *mynode) && 
+			 !node::compare_me(this, *mynode, *(curr_ptr -> next))) ){
+			Iterator tempI(this);
+			tempI.curr = curr_ptr->next;
+			return tempI;
+		}
+		else{
+			return end();
+		}
+		
+	}
+	
+	
+	void remove(const_reference data){
+		node *mynode = new node(alloc.allocate(1));
+		*(mynode -> data) = data;
+		
+		node *curr_ptr = head;
+		
+		// Finding pos to insert
+		while( curr_ptr -> bottom != nullptr){
+			if( !( node::compare_me(this, *(curr_ptr -> next), *mynode) ) ){
+				curr_ptr = curr_ptr -> bottom;
+			}
+			else{
+				curr_ptr = curr_ptr -> next;
+			}
+		}	
+		while(node::compare_me(this, *(curr_ptr -> next), *mynode)){
+				curr_ptr = curr_ptr -> next;
+		}
+		
+		if( (!node::compare_me(this, *(curr_ptr -> next), *mynode) && 
+			!node::compare_me(this, *mynode, *(curr_ptr -> next))) ){
+			curr_ptr = curr_ptr->next;
+			alloc.deallocate(curr_ptr->data, 1);
+			while(curr_ptr){
+				std::cout << "delete top level\n"; 
+				curr_ptr->prev->next = curr_ptr->next;
+				curr_ptr->next->prev = curr_ptr->prev;
+				node *temp = curr_ptr;
+				std::cout << "curr_ptr->top: " << curr_ptr->top << "\n";
+				curr_ptr = curr_ptr->top;
+				delete temp;
+			}
+		}
+	
+	}
+	
 	
 	allocator_type get_allocator() {
 		return alloc;

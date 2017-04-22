@@ -1,8 +1,8 @@
 /* 
 	Authors
-	* Anush S. Kumar (01FB14ECS037)
-	* Sushrith Arkal (01FB14ECS262)
-	* Tejas S Ksetty (01FB14ECS267)
+	* Anush S. Kumar  (01FB14ECS037)
+	* Sushrith Arkal  (01FB14ECS262)
+	* Tejas S Kasetty (01FB14ECS267)
 */
 
 #ifndef __SKIP_LIST_H__
@@ -30,7 +30,7 @@ template<
 		typename T,
 		typename Compare = std::less<T>,
 		typename Allocator = std::allocator<T>
-		> 
+		>
 class skip_list {
 public:
 
@@ -211,7 +211,7 @@ public:
 		curr_ptr -> next = mynode;
 		
 		// Adding node in upper level - if at all it is lucky
-		while(should_propogate()/*true*/){
+		while(should_propogate()){ /*true*/
 			// checking for node which has propogated
 			while(curr_ptr != nullptr && curr_ptr -> top == nullptr){
 				curr_ptr = curr_ptr -> prev;
@@ -267,7 +267,7 @@ public:
 
 		for(int i = h-1; i > 0; --i) {
 			//iterates through all level vectors other than base
-			auto base_it = idk[0].begin();	
+			auto base_it = idk[0].begin();
 			auto curr_it = idk[i].begin();
 			std::cout << "[h]\t";
 			if(curr_it == idk[i].end()){
@@ -279,7 +279,8 @@ public:
 			else{
 				while(base_it != idk[0].end()) {
 				
-					if(*base_it == *curr_it) {
+					//if(*base_it == *curr_it) {
+					if((!comp(*base_it, *curr_it) && !comp(*curr_it, *base_it))) {
 						std::cout << *base_it << "\t";
 						++base_it;
 						++curr_it;
@@ -336,7 +337,18 @@ public:
 			return temp;
 		}
 		
-		reference operator*() const { //derefrence
+		Iterator operator--() { //prefix
+			curr = curr->prev;
+			return *this;
+		}
+	
+		Iterator operator--(int) { //postfix
+			Iterator temp = *this;
+			--(*this);
+			return temp;
+		}
+		
+		reference operator*() const { //dereference
 			return *(curr->data);
 		}
 		

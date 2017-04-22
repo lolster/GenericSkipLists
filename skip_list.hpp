@@ -34,8 +34,8 @@ public:
 	using reference        =  value_type&;
 	using const_pointer    =  typename std::allocator_traits<Allocator>::const_pointer;
 	using const_reference  =  const value_type&;
-	using size_type        =  std::size_t; // Its just unsigned int - size_t sizeof(x)
-
+	using size_type        =  std::size_t;
+	
 private:
 	const size_type h; // max height of the skip list - doesn't change for now
 	size_type n; // counter for number of nodes in the list
@@ -54,8 +54,6 @@ private:
 		node *top;
 		node *bottom;
 		
-		//skip_list<T, Compare, Allocator>::comp;
-		
 		//constructor
 		explicit node( pointer data = nullptr,
 					   node *next = nullptr, 
@@ -64,18 +62,6 @@ private:
 					   node *bottom = nullptr )
 		: data(data), next(next), prev(prev), top(top), bottom(bottom) {
 
-		}
-
-		~node() {
-			// i am such an idiot
-			// delete next_;
-			// delete prev_;
-			// delete top_;
-			// delete bottom_;
-			// std::cout << "Delete me\n";
-			// No RA, therefore no RD
-			// Do not make mistake of deallocating data.
-			// We will do it elsewhere
 		}
 		
 		node(node &other) {
@@ -108,14 +94,11 @@ private:
 								const node& lhs, 
 								const node& rhs) {
 			if(lhs.is_head()) {
-				std::cout << "Comparing with head\n" ;
 				return true;
 			}
 			if(lhs.is_tail()) {
-				std::cout << "Comparing with tail\n" ;
 				return false;
 			}	
-			std::cout << lhs.data << "\t" << rhs.data << "\n";
 			return o->comp(*(lhs.data),*(rhs.data));
 		}
 	};
@@ -125,8 +108,6 @@ private:
 	node *tail; //exclusive
 	
 	bool should_propogate(){
-		//auto temp = std::rand();
-		//std::cout << "should prop rand val: " << temp << "\n";
 		return std::rand() % 2 == 1;	
 	}
 
@@ -149,7 +130,6 @@ public:
 		node *t_stack = tail;
 
 		for(size_type i = 1; i < h; ++i) {
-			// TODO - make more efficient
 			h_stack -> bottom = new node();
 			h_stack -> bottom -> top = h_stack;
 			
@@ -174,7 +154,6 @@ public:
 				node *temp = head;
 				head = head -> next;
 				delete temp;
-				//std::cout << "one\n";
 			}
 			head = next_level;
 		}
@@ -192,8 +171,6 @@ public:
 		tail = nullptr;
 	}
 
-	// member functions	
-	// too bored
 	skip_list(const skip_list<T, Compare, Allocator> &other) = delete;
 	skip_list operator=(const skip_list<T, Compare, Allocator> &other) = delete;
 	
@@ -208,7 +185,6 @@ public:
 		
 		// Finding pos to insert
 		while( curr_ptr -> bottom != nullptr){
-			std::cout << "Level Case\n";
 			if( !( node::compare_me(this, *(curr_ptr -> next), *mynode) ) ){
 				curr_ptr = curr_ptr -> bottom;
 			}
@@ -216,7 +192,6 @@ public:
 				curr_ptr = curr_ptr -> next;
 			}
 		}	
-		std::cout << "base case\n";
 		while(node::compare_me(this, *(curr_ptr -> next), *mynode)){
 				curr_ptr = curr_ptr -> next;
 		}
@@ -234,13 +209,11 @@ public:
 			}
 			// checking if it is in the top level
 			if(curr_ptr == nullptr) {
-				std::cout << "curr_ptr is nullptr\n"; 
 				break;
 			}
 			// Inserting new node (mynode) in the current level
 			curr_ptr = curr_ptr -> top;
 			node *level_mynode = new node(mynode -> data);
-			std::cout << "curr_ptr: " << curr_ptr << std::endl;
 			level_mynode -> next = curr_ptr -> next;
 			level_mynode -> prev = curr_ptr;
 			level_mynode -> next -> prev = level_mynode;
@@ -249,19 +222,6 @@ public:
 			curr_ptr -> next = level_mynode;
 			mynode = level_mynode;
 		}
-		
-		#if 0
-		node *temp = head;
-		while(temp->bottom != nullptr) {
-			temp = temp->bottom;
-		}
-		temp = temp->next;
-		while(!temp->is_tail()){
-			std::cout << *(temp->data) << "->";
-			temp = temp->next;
-		}
-		std::cout << std::endl;
-		#endif
 	}
 	
 	
@@ -294,7 +254,33 @@ public:
 			std::cout << "\n";
 		});
 		
-		#if 0 //buggy like anything
+		
+		#if 1
+		for(int i = h-1; i > 0; --i) {
+			//iterates through all level vectors other than base
+			auto base_it = idk[0].begin();	
+			auto curr_it = idk[i].begin();
+			while(base_it != idk[0].end()) {
+				if(*base_it == *curr_it) {
+					std::cout << *base_it << "\t";
+					++base_it;
+					++curr_it;
+				}
+				else {
+					std::cout << "-\t";
+					++base_it;
+				}
+			}
+			std::cout << std::endl;
+		}
+		auto base_it = idk[0].begin();
+		while(base_it != idk[0].end()) {
+			std::cout << *base_it++ << "\t";
+		}
+		std::cout << std::endl;
+		#endif
+		
+		#if 0
 		int j1 = 0;
 		for(int i = idk.size() - 1; i > 0 ; --i){
 			std::cout << "\nh\t";
@@ -385,7 +371,6 @@ public:
 	
 	Iterator end() {
 		auto tempI = Iterator(this);
-		//ADVANCE TO END
 		while(!tempI.curr->is_tail()) {	
 			tempI.curr = tempI.curr->next;
 		}
@@ -448,11 +433,9 @@ public:
 			curr_ptr = curr_ptr->next;
 			alloc.deallocate(curr_ptr->data, 1);
 			while(curr_ptr){
-				std::cout << "delete top level\n"; 
 				curr_ptr->prev->next = curr_ptr->next;
 				curr_ptr->next->prev = curr_ptr->prev;
 				node *temp = curr_ptr;
-				std::cout << "curr_ptr->top: " << curr_ptr->top << "\n";
 				curr_ptr = curr_ptr->top;
 				delete temp;
 			}

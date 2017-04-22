@@ -1,3 +1,10 @@
+/* 
+	Authors
+	* Anush S. Kumar (01FB14ECS037)
+	* Sushrith Arkal (01FB14ECS262)
+	* Tejas S Ksetty (01FB14ECS267)
+*/
+
 #ifndef __SKIP_LIST_H__
 #define __SKIP_LIST_H__
 

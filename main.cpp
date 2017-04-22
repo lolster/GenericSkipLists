@@ -4,21 +4,21 @@
 #include "skip_list.hpp"
 
 int main() {
-	skip_list<int> s(1);
-	s.insert(1);
-	s.insert(4);
-	s.insert(8);
-	s.insert(9);
-	s.insert(7);
-	s.insert(6);
+	skip_list<std::string> s(10);
+	s.insert("c");
+	s.insert("a");
+	s.insert("d");
+	s.insert("b");
+	s.insert("f");
+	s.insert("e");
 	//s.pretty_print();
-	skip_list<int>::Iterator i1 = s.begin();
-	skip_list<int>::Iterator i2 = s.end();
-	while(i1 != i2) {
-		int a = *i1;
+	//skip_list<std::string>::Iterator i1 = s.begin();
+	//skip_list<int>::Iterator i2 = s.end();
+	//while(i1 != i2) {
+	//	int a = *i1;
 	//	std::cout << a << std::endl;
-		++i1;
-	}
+	//	++i1;
+	//}
 	//std::cout << "Done" << std::endl;
 	
 	//std::for_each(s.begin(), s.end(), [](auto e) {

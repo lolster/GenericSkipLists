@@ -226,7 +226,7 @@ public:
 		}
 	}
 	
-	
+	#if DEBUG
 	void pretty_print() {
 		
 		std::vector<std::vector<value_type>> idk;
@@ -262,7 +262,7 @@ public:
 			//iterates through all level vectors other than base
 			auto base_it = idk[0].begin();	
 			auto curr_it = idk[i].begin();
-			std::cout << "h\t";
+			std::cout << "[h]\t";
 			if(curr_it == idk[i].end()){
 				while(base_it != idk[0].end()) {
 					std::cout << "-" << "\t";
@@ -283,18 +283,19 @@ public:
 					}
 				}
 			}
-			std::cout << "t\t";
+			std::cout << "[t]\t";
 			std::cout << std::endl;
 		}
 		auto base_it = idk[0].begin();
-		std::cout << "h\t";
+		std::cout << "[h]\t";
 		while(base_it != idk[0].end()) {
 			std::cout << *base_it++ << "\t";
 		}
-		std::cout << "t\t";
+		std::cout << "[t]\t";
 		std::cout << std::endl;
 		
 	}
+	#endif
 	
 
 	

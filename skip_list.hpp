@@ -77,6 +77,23 @@ private:
 			// Do not make mistake of deallocating data.
 			// We will do it elsewhere
 		}
+		
+		node(node &other) {
+			this->data = other.data;
+			this->top = other.top;
+			this->bottom = other.bottom;
+			this->left = other.left;
+			this->right = other.right;
+		}
+
+		node& operator=(const node& other) {
+			this->data = other.data;
+			this->top = other.top;
+			this->bottom = other.bottom;
+			this->left = other.left;
+			this->right = other.right;
+			return *this;
+		}
 
 		//utility functions
 		bool is_head() const {
@@ -150,8 +167,9 @@ public:
 	~skip_list() {
 		// Logic:
 		// Iterate through each level and delete the nodes across the level
-		for(size_type i = 0; i < h; ++i) {
-			node *next_level = head -> bottom;
+		node *next_level = nullptr;
+		for(size_type i = 0; i < h-1; ++i) {
+			next_level = head -> bottom;
 			while(head) {
 				node *temp = head;
 				head = head -> next;
@@ -160,13 +178,27 @@ public:
 			}
 			head = next_level;
 		}
+		node *temp = next_level->next;
+		delete next_level;
+		next_level = temp;
+		while(next_level->next) {
+			node *temp = next_level->next;
+			alloc.deallocate(next_level->data, 1);
+			delete next_level;
+			next_level = temp;
+		}
+		delete next_level;
+		head = nullptr;
+		tail = nullptr;
 	}
 
-	// member functions
-	// TODO
-	// operator=
-	// assign
+	// member functions	
+	// too bored
+	skip_list(const skip_list<T, Compare, Allocator> &other) = delete;
+	skip_list operator=(const skip_list<T, Compare, Allocator> &other) = delete;
 	
+	skip_list(const skip_list<T, Compare, Allocator> &&other) = delete;
+	skip_list operator=(const skip_list<T, Compare, Allocator> &&other) = delete;
 	
 	void insert(const_reference data){
 		node *mynode = new node(alloc.allocate(1));

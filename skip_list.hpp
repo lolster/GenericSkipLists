@@ -157,18 +157,20 @@ public:
 			}
 			head = next_level;
 		}
-		node *temp = next_level->next;
-		delete next_level;
-		next_level = temp;
-		while(next_level->next) {
+		if(next_level) {
 			node *temp = next_level->next;
-			alloc.deallocate(next_level->data, 1);
 			delete next_level;
 			next_level = temp;
+			while(next_level->next) {
+				node *temp = next_level->next;
+				alloc.deallocate(next_level->data, 1);
+				delete next_level;
+				next_level = temp;
+			}
+			delete next_level;
+			head = nullptr;
+			tail = nullptr;
 		}
-		delete next_level;
-		head = nullptr;
-		tail = nullptr;
 	}
 
 	skip_list(const skip_list<T, Compare, Allocator> &other) = delete;
@@ -225,7 +227,6 @@ public:
 	}
 	
 	
-	#if DEBUG
 	void pretty_print() {
 		
 		std::vector<std::vector<value_type>> idk;
@@ -247,77 +248,53 @@ public:
 			temp = temp -> top; 
 		}
 		
+		#if 0
 		std::for_each(idk.begin(), idk.end(), [](auto e){
 			std::for_each(e.begin(), e.end(), [](auto v){
 				std::cout << v << "->";
 			});
 			std::cout << "\n";
 		});
+		#endif 
 		
-		
-		#if 1
+
 		for(int i = h-1; i > 0; --i) {
 			//iterates through all level vectors other than base
 			auto base_it = idk[0].begin();	
 			auto curr_it = idk[i].begin();
-			while(base_it != idk[0].end()) {
-				if(*base_it == *curr_it) {
-					std::cout << *base_it << "\t";
-					++base_it;
-					++curr_it;
-				}
-				else {
-					std::cout << "-\t";
+			std::cout << "h\t";
+			if(curr_it == idk[i].end()){
+				while(base_it != idk[0].end()) {
+					std::cout << "-" << "\t";
 					++base_it;
 				}
 			}
+			else{
+				while(base_it != idk[0].end()) {
+				
+					if(*base_it == *curr_it) {
+						std::cout << *base_it << "\t";
+						++base_it;
+						++curr_it;
+					}
+					else {
+						std::cout << "-\t";
+						++base_it;
+					}
+				}
+			}
+			std::cout << "t\t";
 			std::cout << std::endl;
 		}
 		auto base_it = idk[0].begin();
+		std::cout << "h\t";
 		while(base_it != idk[0].end()) {
 			std::cout << *base_it++ << "\t";
 		}
+		std::cout << "t\t";
 		std::cout << std::endl;
-		#endif
 		
-		#if 0
-		int j1 = 0;
-		for(int i = idk.size() - 1; i > 0 ; --i){
-			std::cout << "\nh\t";
-			j1 = idk[i].size() - 1;
-			for(int j = 0; j < idk[0].size(); ++j){
-				// if level is empty
-				if(idk[i].size() == 0){
-					for(int j = 0; j < idk[0].size(); ++j){
-						std::cout << "-" << "\t";	
-					}
-					break;
-				}
-				//std::cout << "if(" << idk[0][j] << "==" << idk[i][j1] << ")\n";
-				if( idk[0][j] == idk[i][j1]){
-					std::cout << idk[0][j] << "\t"; 
-					j1--;
-				}
-				else{
-					std::cout << "-" << "\t";
-				}
-				
-			}
-			std::cout << "t";
-			j1 = 0;
-		}
-		
-		//Special handle for base level
-		std::cout << "\nh\t";
-		for(int i = 0; i < idk[0].size(); i++){
-			std::cout << idk[0][i] << "\t";
-		}
-		std::cout << "t";
-		std::cout << "\n";
-		
-		#endif
 	}
-	#endif
 	
 
 	

@@ -320,7 +320,67 @@ public:
 		}
 	}
 	
+	class Iterator{
+	public:
+		//soo sleepy.
+		node *curr;
+		
+		Iterator(skip_list<T, Compare, Allocator>* l) : curr(l->head) {
+			while(curr->bottom) {
+				curr = curr->bottom;
+			}
+			curr = curr->next;
+		}
+		
+		Iterator(const Iterator& cp) {
+			this->curr = cp.curr;
+		}
+		
+		Iterator operator=(const Iterator &cp) {
+			this->curr = cp.curr;
+		}
+		
+		Iterator operator++() { //prefix
+			curr = curr->next;
+			return *this;
+		}
 	
+		Iterator operator++(int) { //postfix
+			Iterator temp = *this;
+			++(*this);
+			return temp;
+		}
+		
+		reference operator*() const { //derefrence
+			return *(curr->data);
+		}
+		
+		friend bool operator==(Iterator& lhs, Iterator& rhs) {
+			return lhs.curr == rhs.curr;
+		}
+		
+		friend bool operator!=(Iterator& lhs, Iterator& rhs) {
+			return !(lhs == rhs);
+		}
+		
+		//bidirectional_iterator : forward_iterator {
+		//	iterator& operator--(); //prefix increment
+		//	iterator operator--(int); //postfix decrement
+		//};
+	};
+	
+	Iterator begin() {
+		return Iterator(this);
+	}
+	
+	Iterator end() {
+		auto tempI = Iterator(this);
+		//ADVANCE TO END
+		while(!tempI.curr->is_tail()) {	
+			tempI.curr = tempI.curr->next;
+		}
+		return tempI;
+	}
 	
 	allocator_type get_allocator() {
 		return alloc;
@@ -338,12 +398,6 @@ public:
 	size_type max_size() {
 		return std::numeric_limits<size_type>::max();
 	}
-
-	//iterator:
-	//TODO
-	class Iterator {
-	public:
-	};
 };
 
 #endif

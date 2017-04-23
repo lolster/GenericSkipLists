@@ -200,7 +200,7 @@ public:
 			else{
 				curr_ptr = curr_ptr -> next;
 			}
-		}	
+		}
 		while(node::compare_me(this, *(curr_ptr -> next), *mynode)){
 				curr_ptr = curr_ptr -> next;
 		}

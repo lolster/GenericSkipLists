@@ -1,7 +1,11 @@
 /* 
+	Filename:    skip_list.hpp
+	Description: This is an STL compatible library that provides a skip list
+	             data structure with support for bidirectional iterators
+	
 	Authors
-	* Anush S. Kumar  (01FB14ECS037)
 	* Sushrith Arkal  (01FB14ECS262)
+	* Anush S. Kumar  (01FB14ECS037)
 	* Tejas S Kasetty (01FB14ECS267)
 */
 
@@ -211,7 +215,7 @@ public:
 		curr_ptr -> next = mynode;
 		
 		// Adding node in upper level - if at all it is lucky
-		while(should_propogate()){ /*true*/
+		while(should_propogate()){
 			// checking for node which has propogated
 			while(curr_ptr != nullptr && curr_ptr -> top == nullptr){
 				curr_ptr = curr_ptr -> prev;

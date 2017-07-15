@@ -1,7 +1,10 @@
 /* 
+	Filename:    main.cpp
+	Description: Example driver program for `skip_list.hpp` library.
+	
 	Authors
-	* Anush S. Kumar  (01FB14ECS037)
 	* Sushrith Arkal  (01FB14ECS262)
+	* Anush S. Kumar  (01FB14ECS037)
 	* Tejas S Kasetty (01FB14ECS267)
 */
 

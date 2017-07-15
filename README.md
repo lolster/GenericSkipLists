@@ -1,5 +1,9 @@
 # Generic Skip List Implementation in C++
 
+## Introduction
+
+This is our attempt at creating a STL compatible generic skip list data structure library with support for iterators. 
+
 ## Abstract
 
 The skip list data structure is an ordered linear data structure (linked list container) that also allows fast search (better than O(N), where N is the number of elements in the list). This is made possible by allowing the search algorithm to &quot;skip&quot; intermediate nodes until it reaches the node that it is looking for. The average case time complexity can be shown to be O(logN), and even more impressive is that it can be shown that, &quot;with high probability&quot;, the time complexity is O(logN).
@@ -14,7 +18,7 @@ Thus, in the search algorithm, taking into account the ordered nature of the dat
 
 In our project, we plan to implement the skip list data structure in a generic manner, so that is will work with pre-existing algorithms present as part of the Standard Template Library of C++. We will implement iterators to this effect to support majority of these functions.
 
-As of now, our plan is to implement a list that allows duplicate elements, although it should be noted that, considering the advantage that skip list provides us, implementing a set data structure is also a real probability, and would provide that advantage of possibly cache friendly set iteration and also , on average and &quot;with high probability&quot;,  O(logN) insertion operation.
+As of now, our plan is to implement a list that allows duplicate elements, although it should be noted that, considering the advantage that skip list provides us, implementing a set data structure is also a real probability, and would provide the advantage of possibly cache friendly set iteration and also, on average and &quot;with high probability&quot;, O(logN) insertion operation.
 
 # Authors
 ```

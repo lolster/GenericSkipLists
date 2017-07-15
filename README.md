@@ -2,7 +2,7 @@
 
 ## Introduction
 
-This is our attempt at creating a STL compatible generic skip list data structure library with support for iterators. 
+This is our attempt at creating a STL compatible generic skip list data structure library with support for bidirectional iterators. 
 
 ## Abstract
 
